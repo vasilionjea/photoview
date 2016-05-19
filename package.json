@@ -1,0 +1,22 @@
+{
+  "name": "photoview",
+  "title": "PhotoView.js",
+  "version": "0.0.1",
+  "description": "A vanilla JS lightbox component",
+  "author": "Billy Onjea",
+  "license":  {
+    "name": "MIT",
+    "url": "https://github.com/istocode/photoview/blob/master/LICENSE"
+  },
+  "homepage": "http://istocode.github.io/photoview",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-concat": "~0.5.0",
+    "grunt-contrib-sass": "~0.7.3",
+    "grunt-contrib-uglify": "~0.5.0",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-watch" : "~0.6.1",
+    "grunt-contrib-connect": "~0.8.0"
+  }
+}

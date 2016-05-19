@@ -1,0 +1,20 @@
+@import "_base";
+@import "_photoview";
+
+main {
+  padding: 20px;
+  max-width: calc(84.5% + 40px);
+  margin: 0 auto;
+}
+
+header {
+  border-bottom: 3px solid #F7F7F7;
+  margin-left: 4px;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    padding: .875rem 0;
+    font-weight: 300;
+  }
+}
