@@ -15,7 +15,7 @@
     })
   });
 
-  window.photos.load('nature');
+  window.photos.load('zion');
 
   // re-render with new photos
   // photos.load('yosemite');
