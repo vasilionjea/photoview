@@ -1,0 +1,72 @@
+/*
+ * Base
+ */
+*, :before, :after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body, ul, li, figure {
+  margin: 0;
+  padding: 0;
+  color: #444;
+}
+
+ul, li {
+  list-style: none;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+button[disabled] {
+  cursor: default;
+}
+
+noscript {
+  display: block;
+  text-align: center;
+  color: #666;
+}
+
+body {
+  font-family: Helvetica, sans-serif;
+  font-size: 100%; /* 16px */
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1 { font-size: 2rem; /* 32px */ }
+h2 { font-size: 1.75rem; /* 28px */ }
+h3 { font-size: 1.5rem; /* 24px */ }
+h4 { font-size: 1.25rem; /* 20px */ }
+h5 { font-size: 1rem; /* 16px */ }
+h6 { font-size: .75rem; /* 12px */ }
+
+p {
+  line-height: 1.4;
+}
+
+img {
+  border: 0;
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+}
+
+.hidden {
+  display: none;
+}
