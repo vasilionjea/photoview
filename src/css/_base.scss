@@ -7,6 +7,10 @@
   box-sizing: border-box;
 }
 
+main, section, aside, nav {
+  display: block;
+}
+
 body, ul, li, figure {
   margin: 0;
   padding: 0;
