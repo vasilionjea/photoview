@@ -1,7 +1,7 @@
 {
   "name": "photoview",
   "title": "PhotoView.js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A vanilla JS lightbox component",
   "author": "Billy Onjea",
   "license":  {
