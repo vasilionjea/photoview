@@ -4,6 +4,7 @@ A light and modular component to display photos in a navigable popup; a.k.a. "li
 ### Features
 - Loads photos from a remote service (_e.g. Flickr_).
 - Displays photos and navigates through them.
+- ..._more to come_
 
 ### Browsers
   - Latest versions of Chrome, Safari, Firefox and IE (_it may work in others as well, but these were tested_).
@@ -13,3 +14,4 @@ A light and modular component to display photos in a navigable popup; a.k.a. "li
 - Add close button (_currently a user must click the large image to close it_)
 - Add a `LocalService` class that uses an array of photo objects.
 - Add support for other services, e.g. Unsplash.
+- Add ARIA roles
