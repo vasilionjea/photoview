@@ -22,6 +22,7 @@
 
       &:hover {
         opacity: 1;
+        cursor: -webkit-zoom-in;
         cursor: zoom-in;
       }
     }
@@ -98,6 +99,7 @@
     top: 50%;
     left: 50%;
     @include transform(translate(-50%, -50%));
+    cursor: -webkit-zoom-out;
     cursor: zoom-out;
     box-shadow: 0 0 5px 0 rgba(158, 158, 158, 0.35);
   }
