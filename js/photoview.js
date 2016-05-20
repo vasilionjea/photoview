@@ -303,7 +303,7 @@
  * PhotoView Module
  *
  * This module fetches photos from the provided photo service (e.g. flickr) and
- * creates, updates, and generally handles the UI layer for the app.
+ * creates, updates, and handles the UI layer for the component.
  */
 (function(window) {
   'use strict';
@@ -400,7 +400,11 @@
     },
 
     /**
+     * Constructs the HTML for the whole component, including 
+     * all the small photos in the grid.
+     *
      * @private
+     * @return {String}
      */
     _buildHtml: function(photos) {
       var html = this.templates.photoView,
@@ -420,6 +424,7 @@
     },
 
     /**
+     * Inserts the component's HTML into the DOM and displays the UI
      * @private
      */
     _render: function(photos) {
@@ -432,6 +437,9 @@
     },
 
     /**
+     * Handles click event for the small images, 
+     * large image, and navigation buttons.
+     *
      * @private
      */
     _attachEvents: function() {
@@ -465,6 +473,8 @@
     },
 
     /**
+     * Displays a single large photo into the photoview box
+     * @param {Object} photo
      * @private
      */
     _show: function(photo) {
@@ -474,6 +484,10 @@
       this._currentIndex = photo.index; 
     },
 
+    /**
+     * Opens the large photo view for a single photo
+     * @param {Object} photo
+     */
     open: function(photo) {
       this._show(photo);
 
@@ -483,6 +497,9 @@
       this.ui.photoView.classList.add('visible');
     },
 
+    /**
+     * Closes the large photo view
+     */
     close: function() {
       // Empty large photo
       this.ui.largePhoto.innerHTML = '';
@@ -493,10 +510,16 @@
       this.ui.photoView.classList.remove('visible');
     },
 
+    /**
+     * While the large photo view is open, it shows the next large image
+     */
     prev: function() {
       this._show(this.service.getPhoto(this._currentIndex - 1));
     },
 
+    /**
+     * While the large photo view is open, it shows the previous large image
+     */
     next: function() {
       this._show(this.service.getPhoto(this._currentIndex + 1));
     }
