@@ -5,20 +5,62 @@
   'use strict';
 
   var app = window.app,
-
   _ = app._,
   ajax = app.ajax,
 
-  PHOTO_URL_PATTERN = 'https://farm{farm}.staticflickr.com/{server}/{id}_{secret}',
-  SMALL_URL_SUFFIX = '_q.jpg',
-  LARGE_URL_SUFFIX = '_z.jpg',
+  // Single Photo
+  PHOTO_URL = {
+    pattern: 'https://farm{farm}.staticflickr.com/{server}/{id}_{secret}',
+    smallSuffix: '_q.jpg',
+    largeSuffix: '_z.jpg'
+  },
 
-  API_URL_PATTERN = 'https://api.flickr.com/services/rest/?method={method}&api_key={api_key}&text={text}&per_page={per_page}&format=json&nojsoncallback=1',
-  API_URL_PARAMS = {
-    api_key: '',
-    method: 'flickr.photos.search',
-    per_page: 20 
+  // All Photos
+  PHOTOS_URL = {
+    pattern: 'https://api.flickr.com/services/rest/?method={method}&api_key={api_key}&per_page={per_page}',
+    format: '&format=json&nojsoncallback=1',
+    
+    methods: {
+      'flickr.photos.search': '&text={text}',
+      'flickr.interestingness.getList': ''      
+    },
+
+    defaultParams: {
+      api_key: '',
+      method: 'flickr.interestingness.getList',
+      per_page: 20
+    }
   };
+
+  /**
+   * Builds the fetch URL for a single photo.
+   *
+   * @param {Object} photo - The photo object literal
+   * @param {String} size - The size
+   * @return {String}
+   */
+  function _buildPhotoUrl(photo, size) {
+    var url = _.applyPatterns(PHOTO_URL.pattern.slice(), photo);
+
+    if(size === 'large') {
+      url += PHOTO_URL.largeSuffix;
+    } else {
+      url += PHOTO_URL.smallSuffix;
+    }
+
+    return url;
+  }
+
+  /**
+   * Builds the fetch URL for all photos using a specific Flickr method.
+   *
+   * @param {Object} params - The values for the query params.
+   * @return {String}
+   */
+  function _buildPhotosUrl(params) {
+    var fetchUrl = PHOTOS_URL.pattern + PHOTOS_URL.methods[params.method] + PHOTOS_URL.format;
+    return _.applyPatterns(fetchUrl, params);
+  }
 
   /**
    * Flickr Service
@@ -27,35 +69,26 @@
    * @param {Number} options.per_page - Total number of photos to fetch
    */
   function Flickr(params) {
-    // Merge defaults with provided params
-    this.settings = _.extend({}, params, API_URL_PARAMS);
-
-    // Slice the API_URL_PATTERN to make a copy so we're 
-    // not modifying the original one.
-    this.url = _.applyPatterns(API_URL_PATTERN.slice(), this.settings);
+    this.settings = _.extend({}, params, PHOTOS_URL.defaultParams);
   }
 
   Flickr.prototype = {
     constructor: Flickr,
 
     /**
-     * Creates the search URL by applying the search term,
-     * and sends the XHR request over to the Flickr API.
+     * Sends an XHR request over to the Flickr API.
      *
-     * @param {String} opts.term - The search term
-     * @param {Function} opts.success - The success callback
-     * @param {Function} opts.error - The error callback
+     * @param {String} [params.text] - The search term
+     * @param {Function} [params.success] - The success callback
+     * @param {Function} [params.error] - The error callback
      */
-    search: function(opts) {
-      // Apply the pattern per serch term.
-      var searchUrl = _.applyPatterns(this.url.slice(), {
-        text: opts.term
-      });
+    fetch: function(params) {
+      params = _.extend({}, params, this.settings);
 
-      ajax.fetch({
-        url: searchUrl,
-        success: this._onFetchSuccess.bind(this, opts.success),
-        error: this._onFetchError.bind(this, opts.error)
+      ajax.get({
+        url: _buildPhotosUrl(params),
+        success: this._onFetchSuccess.bind(this, params.success),
+        error: this._onFetchError.bind(this, params.error)
       });
     },
 
@@ -72,7 +105,7 @@
         this._setPhotos(data.photos.photo);
       }
 
-      callback(this.getPhotos());
+      callback && callback(this.getPhotos());
     },
 
     /**
@@ -81,25 +114,8 @@
      * @param {Number} status - The HTTP status code
      */
     _onFetchError: function(callback, status) {
-      debugger;
-    },
-
-    /**
-     * @private
-     * @param {Object} photo - The photo object literal
-     * @param {String} size - The size
-     * @return {String}
-     */
-    _createPhotoUrl: function(photo, size) {
-      var url = _.applyPatterns(PHOTO_URL_PATTERN.slice(), photo);
-
-      if(size === 'large') {
-        url += LARGE_URL_SUFFIX;
-      } else {
-        url += SMALL_URL_SUFFIX;
-      }
-
-      return url;
+      callback && callback(status);
+      // debugger;
     },
 
     /**
@@ -115,8 +131,8 @@
           index: i,
           id: photo.id,
           title: photo.title,
-          smallUrl: self._createPhotoUrl(photo, 'small'),
-          largeUrl: self._createPhotoUrl(photo, 'large')
+          smallUrl: _buildPhotoUrl(photo, 'small'),
+          largeUrl: _buildPhotoUrl(photo, 'large')
         };
       });
     },

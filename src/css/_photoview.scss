@@ -5,31 +5,26 @@
 .photo-grid {
   @include flex();
   @include flex-wrap();
-  @include flex-center();
 
   .photo {
     position: relative;
     margin: 2px;
     width: 150px;
     height: 150px;
-    opacity: .85;
     background: #F2F2F2;
-    @include transition(opacity .3s linear);
     @include user-select(none);
-  }
 
-  figure { height: 100%; }
+    figure { height: 100%; }
 
-  .photo:hover {
-    opacity: 1;
-    cursor: zoom-in;
-  }
+    img {
+      opacity: .82;
+      @include transition(opacity .3s linear);
 
-  img {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    @include transform(translate(-50%, -50%));
+      &:hover {
+        opacity: 1;
+        cursor: zoom-in;
+      }
+    }
   }
 }
 
@@ -39,6 +34,17 @@
  */
 .photo-view-open {
   overflow: hidden;
+
+  .photo-grid {
+    -webkit-filter: grayscale(80%);
+    -moz-filter: grayscale(80%);
+    -ms-filter: grayscale(80%);
+    filter: grayscale(80%);
+
+    .photo {
+      opacity: .5;
+    }
+  }
 }
 
 .photo-view-backdrop,
@@ -49,16 +55,29 @@
   width: 100%;
   height: 100%;
   @include user-select(none);
+  opacity: 0;
 }
 
 .photo-view-backdrop {
-  z-index: 10;
-  background: rgba(255, 251, 254, 0.9);
+  z-index: -1;
+  background: rgba(255, 251, 254, 0.94);
+  @include transition(opacity .2s linear);
+
+  &.visible {
+    z-index: 10;
+    opacity: 1;
+  }
 }
 
 .photo-view {
-  z-index: 11;
+  z-index: -1;
   padding: 10px;
+  @include transition(opacity .3s ease-in);
+
+  &.visible {
+    z-index: 11;
+    opacity: 1;
+  }
 
   .inner {
     height: 100%;
