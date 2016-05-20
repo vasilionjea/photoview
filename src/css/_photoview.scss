@@ -23,6 +23,7 @@
       &:hover {
         opacity: 1;
         cursor: -webkit-zoom-in;
+        cursor: -ms-zoom-in;
         cursor: zoom-in;
       }
     }
@@ -100,16 +101,17 @@
     left: 50%;
     @include transform(translate(-50%, -50%));
     cursor: -webkit-zoom-out;
+    cursor: -ms-zoom-out;
     cursor: zoom-out;
     box-shadow: 0 0 5px 0 rgba(158, 158, 158, 0.35);
   }
 
   figcaption {
     position: absolute;
-    top: 4%;
+    top: 3%;
     left: 50%;
     @include transform(translateX(-50%));
-    padding: 4px 14px;
+    padding: 2px 10px;
     font-size: .925rem;
     text-align: center;
     @include user-select(initial);
