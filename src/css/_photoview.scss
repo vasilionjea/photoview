@@ -71,7 +71,7 @@
 
 .photo-view {
   z-index: -1;
-  padding: 10px;
+  padding: 20px;
   @include transition(opacity .3s ease-in);
 
   &.visible {
@@ -80,30 +80,39 @@
   }
 
   .inner {
+    @include flex();
+    @include flex-wrap();
+    @include flex-center();
     height: 100%;
   }
 
   figure {
+    position: relative;
+    width: 50%;
+    height: 94vh;
+    overflow: hidden;
+  }
+
+  img {
     position: absolute;
     top: 50%;
     left: 50%;
     @include transform(translate(-50%, -50%));
-  }
-
-  img {
-    max-width: 94%;
-    height: auto;
-    display: block;
-    margin: 0 auto;
     cursor: zoom-out;
     box-shadow: 0 0 5px 0 rgba(158, 158, 158, 0.35);
   }
 
   figcaption {
+    position: absolute;
+    top: 4%;
+    left: 50%;
+    @include transform(translateX(-50%));
+    padding: 4px 14px;
     font-size: .925rem;
-    padding: 9px 0;
     text-align: center;
     @include user-select(initial);
+    color: #646464;
+    background: rgba(255, 251, 254, 0.94);
   }
 
   button {
