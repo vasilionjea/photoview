@@ -4,19 +4,24 @@
 ;(function(window) {
   'use strict';
 
-  var app = window.app;
+  var app = window.app,
 
-  window.photos = new app.PhotoView({
+  // Create a PhotoView instance passing the container and a service
+  photos = new app.PhotoView({
     container: '#photography',
 
     service: new app.Flickr({
       api_key: '7beb137cb24366f1e140a7a50bc771ed',
-      per_page: 34
+      per_page: 26
     })
   });
 
-  window.photos.load('zion');
+  // Use default method to load photos from Flickr
+  photos.load();
 
-  // re-render with new photos
-  // photos.load('yosemite');
+  // Load photos via Flickr's search method
+  // photos.load({
+  //   method: 'flickr.photos.search',
+  //   text: 'yosemite'
+  // });
 }(this));

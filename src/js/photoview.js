@@ -29,13 +29,13 @@
    * @return {String}
    */
   function _photoViewTemplate() {
-    var tpl = '<div class="photo-view-backdrop hidden" aria-hidden="true"></div>';
+    var tpl = '<div class="photo-view-backdrop" aria-hidden="true"></div>';
 
-    tpl += '<aside class="photo-view hidden">';
+    tpl += '<aside class="photo-view">';
       tpl += '<div class="inner">';
         tpl += '<figure></figure>';
-        tpl += '<button class="prev" title="Previous photo"></button>';
-        tpl += '<button class="next" title="Next photo"></button>';
+        tpl += '<button class="nav-btn prev" title="Previous photo"></button>';
+        tpl += '<button class="nav-btn next" title="Next photo"></button>';
       tpl += '</div>';
     tpl += '</aside>';
 
@@ -65,12 +65,17 @@
     this.settings = options;
     this.service = this.settings.service;
 
-    // Elements & templates
+    // Navigation related
+    this._currentIndex = null;
+
+    // Elements
     this.ui.container = _.$(this.settings.container);
+
+    // Templates
     this.templates.smallPhoto = _smallPhotoTemplate();
     this.templates.photoView = _photoViewTemplate();
 
-    // Setup
+    // DOM events
     this._attachEvents();
   }
 
@@ -86,18 +91,11 @@
       container: null
     },
 
-    load: function(term) {
-      this.service.search({
-        term: term,
-        success: this._onLoad.bind(this)
-      });
-    },
+    load: function(opts) {
+      var params = opts || {};
+      params.success = this._render.bind(this);
 
-    /**
-     * @private
-     */
-    _onLoad: function(photos) {
-      this._render(photos);
+      this.service.fetch(params);
     },
 
     /**
@@ -127,7 +125,7 @@
       this.ui.container.insertAdjacentHTML('beforeend', this._buildHtml(photos));
 
       // Reference UI elements that were just appended
-      this.ui.photoViewBackdrop = _.$('.photo-view-backdrop', this.ui.container);
+      this.ui.backdrop = _.$('.photo-view-backdrop', this.ui.container);
       this.ui.photoView = _.$('.photo-view', this.ui.container);
       this.ui.largePhoto = _.$('figure', this.ui.photoView);
     },
@@ -137,36 +135,51 @@
      */
     _attachEvents: function() {
       this.ui.container.addEventListener('click', function(e) {
-        var elem = e.target.parentNode.parentNode,
+        var elem = e.target,
+          grandParent = elem.parentNode.parentNode,
           photo;
 
-        // Close
-        if(e.target.classList.contains('large-photo')) {
+        // If the large photo was clicked, close it
+        if(elem.classList.contains('large-photo')) {
           this.close();
           return;
         }
 
-        if(!elem.classList.contains('photo')) {
+        // If the prev or next button was clicked, navigate
+        if(elem.classList.contains('nav-btn')) {
+          elem.classList.contains('prev') && this.prev();
+          elem.classList.contains('next') && this.next();
           return;
         }
 
-        // Open a new photo
-        photo = this.service.getPhoto(parseInt(elem.dataset.index, 10));
+        // If a small photo was clicked, open its larger equivalent
+        if(grandParent.classList.contains('photo')) {
+          photo = this.service.getPhoto(parseInt(grandParent.dataset.index, 10));
 
-        if(photo) {
-          this.open(photo);
+          if(photo) {
+            this.open(photo);
+          }
         }
       }.bind(this), false);
     },
 
-    open: function(photo) {
-      // Generate template with data
+    /**
+     * @private
+     */
+    _show: function(photo) {
+      if(!photo) { return; }
+
       this.ui.largePhoto.innerHTML = _.applyPatterns(_largePhotoTemplate(), photo);
+      this._currentIndex = photo.index; 
+    },
+
+    open: function(photo) {
+      this._show(photo);
 
       // Show UI
       document.body.classList.add('photo-view-open');
-      this.ui.photoViewBackdrop.classList.remove('hidden');
-      this.ui.photoView.classList.remove('hidden');
+      this.ui.backdrop.classList.add('visible');
+      this.ui.photoView.classList.add('visible');
     },
 
     close: function() {
@@ -175,8 +188,16 @@
 
       // Hide UI
       document.body.classList.remove('photo-view-open');
-      this.ui.photoViewBackdrop.classList.add('hidden');
-      this.ui.photoView.classList.add('hidden');
+      this.ui.backdrop.classList.remove('visible');
+      this.ui.photoView.classList.remove('visible');
+    },
+
+    prev: function() {
+      this._show(this.service.getPhoto(this._currentIndex - 1));
+    },
+
+    next: function() {
+      this._show(this.service.getPhoto(this._currentIndex + 1));
     }
   };
 

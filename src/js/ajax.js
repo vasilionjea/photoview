@@ -15,7 +15,7 @@
      * @param {String} options.url The URL to fetch from
      * @param {Boolean} options.cache Set cache to false when wanting new request on every fetch
      */
-    fetch: function(options) {
+    get: function(options) {
       var xhr,
         url = options.url;
 
