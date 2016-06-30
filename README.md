@@ -1,4 +1,7 @@
 # Photoview
+
+[<small>work in progress...</small>]
+
 A light and modular component to display photos in a navigable popup; a.k.a. "lightbox". Written in plain JavaScript for modern Browsers. A working example of this application can be seen at the following URL: http://vasilionjea.github.io/photoview/
 
 ### Features
