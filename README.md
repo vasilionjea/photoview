@@ -23,3 +23,8 @@ A light and modular component to display photos in a navigable popup; a.k.a. "li
 - Add event emitter so communication between service & UI layer is done more succinctly.
 - Add ARIA roles.
 - Possibly allow for other types of content to be rendered, e.g. videos and html.
+
+### Resources
+- https://www.flickr.com/services/api/
+- https://www.flickr.com/services/api/misc.urls.html
+- https://www.flickr.com/services/developer/api/
