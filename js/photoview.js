@@ -93,8 +93,51 @@
   // App
   window.app = window.app || {};
 
-  // Ajax 
-  window.app.ajax = {
+  // Utils
+  var _ = window.app._;
+
+  // Ajax helper
+  function ajax(options) {
+    return new Promise(function resolver(resolve, reject) {
+      var xhr,
+        url = options.url,
+        type = options.type,
+        data = options.data || null;
+
+      // Only modern Browsers please!
+      if(window.XMLHttpRequest) {
+        xhr = new XMLHttpRequest();
+      } else {
+        reject('Your browser doesn\'t support the XMLHttpRequest object!');
+      }
+
+      // Bypass cache by adding timestamp at the end of the url
+      if(options.cache === false) {
+        url = url + ((/\?/).test(url) ? '&' : '?') + (+(new Date()));
+      }
+
+      // Set handler to process server's response
+      xhr.addEventListener('load', function() {
+        if(xhr.status === 200) {
+          resolve(xhr.responseText, xhr.status, xhr.statusText);
+        } else {
+          reject(xhr.status, xhr.statusText); 
+        }
+      }, false);
+
+      // Set handler to process connection error
+      xhr.addEventListener('error', function() {
+        reject(xhr.status); 
+      });
+
+      // Open connection and send request
+      xhr.open(type, url, true);
+      xhr.send(data);
+    });
+  }
+
+  // HTTP 
+  window.app.http = {
     /**
      * Fetches a resource via XHR
      *
@@ -102,35 +145,7 @@
      * @param {Boolean} options.cache Set cache to false when wanting new request on every fetch
      */
     get: function(options) {
-      var xhr,
-        url = options.url;
-
-      // Bypass cache by adding timestamp at the end of the url
-      if(options.cache === false) {
-        url = url + ((/\?/).test(url) ? '&' : '?') + (+(new Date()));
-      }
-
-      // Only modern Browsers please!
-      if(window.XMLHttpRequest) {
-        xhr = new XMLHttpRequest();
-      } else {
-        throw new Error('Your browser doesn\'t support the XMLHttpRequest object!');
-      }
-
-      // Set handler to process server's response
-      xhr.addEventListener('readystatechange', function() {
-        if(xhr.readyState === 4) {
-          if(xhr.status === 200) {
-            options.success(xhr.responseText, xhr.status, xhr.statusText);
-          } else {
-            options.error(xhr.status, xhr.statusText);
-          }
-        }
-      }, false);
-
-      // Open connection and send request
-      xhr.open('GET', url, true);
-      xhr.send(null);
+      return ajax(_.extend({ type: 'GET' }, options));
     }
   };
 }(this));
@@ -143,7 +158,7 @@
 
   var app = window.app,
   _ = app._,
-  ajax = app.ajax,
+  http = app.http,
 
   // Single Photo
   PHOTO_URL = {
@@ -222,11 +237,12 @@
     fetch: function(params) {
       params = _.extend({}, params, this.settings);
 
-      ajax.get({
-        url: _buildPhotosUrl(params),
-        success: this._onFetchSuccess.bind(this, params.success),
-        error: this._onFetchError.bind(this, params.error)
-      });
+      return http.get({
+        url: _buildPhotosUrl(params)
+      }).then(
+        this._onFetchSuccess.bind(this, params.success),
+        this._onFetchError.bind(this, params.error)
+      );
     },
 
     /**
@@ -396,7 +412,7 @@
       var params = opts || {};
       params.success = this._render.bind(this);
 
-      this.service.fetch(params);
+      return this.service.fetch(params);
     },
 
     /**

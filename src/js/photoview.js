@@ -95,7 +95,7 @@
       var params = opts || {};
       params.success = this._render.bind(this);
 
-      this.service.fetch(params);
+      return this.service.fetch(params);
     },
 
     /**
