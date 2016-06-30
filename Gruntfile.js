@@ -20,7 +20,7 @@ module.exports = function(grunt) {
       scripts: {
         src: [
           'src/js/utils.js',
-          'src/js/ajax.js',
+          'src/js/http.js',
           'src/js/flickr.js',
           'src/js/photoview.js'
         ],

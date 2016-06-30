@@ -6,7 +6,7 @@
 
   var app = window.app,
   _ = app._,
-  ajax = app.ajax,
+  http = app.http,
 
   // Single Photo
   PHOTO_URL = {
@@ -85,11 +85,12 @@
     fetch: function(params) {
       params = _.extend({}, params, this.settings);
 
-      ajax.get({
-        url: _buildPhotosUrl(params),
-        success: this._onFetchSuccess.bind(this, params.success),
-        error: this._onFetchError.bind(this, params.error)
-      });
+      return http.get({
+        url: _buildPhotosUrl(params)
+      }).then(
+        this._onFetchSuccess.bind(this, params.success),
+        this._onFetchError.bind(this, params.error)
+      );
     },
 
     /**
