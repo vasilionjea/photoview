@@ -10,7 +10,13 @@ A light and modular component to display photos in a navigable popup; a.k.a. "li
 - _more to come..._
 
 ### Browsers
-  - Latest versions of Chrome, Safari, Firefox and IE (_it may work in others as well, but these were tested_).
+Latest versions of the following (_it may work in others as well, but these were tested_):
+  - Chrome
+  - Safari
+  - Firefox
+  - IE <sup>*</sup>
+
+<sup>*</sup> _IE11 doesn't support the Promise API, so a polyfill is required; here is a simple promise lib you could use: https://github.com/then/promise_
 
 ### Local Development
 1. First `cd photoview/` and run `npm install`.
